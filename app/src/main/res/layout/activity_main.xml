@@ -7,23 +7,55 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/tv_add"
+        android:id="@+id/tv_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="添加数据 1个"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_add_t"
+        android:layout_marginTop="20dp"
+        android:text="测试方法"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tv_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="添加数据 1个"
+        app:layout_constraintBottom_toTopOf="@+id/tv_add_t"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_test" />
+
+    <TextView
         android:id="@+id/tv_add_t"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="添加数据 2个"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_add_th"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_add" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_add" />
+
+    <TextView
+        android:id="@+id/tv_add_th"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="停止接收数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_add_t" />
+
+    <TextView
+        android:id="@+id/tv_add_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="接收下一条数据"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_add_th" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

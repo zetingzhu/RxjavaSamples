@@ -19,4 +19,11 @@ public class DialogData {
     public void setDialogType(int dialogType) {
         this.dialogType = dialogType;
     }
+
+    @Override
+    public String toString() {
+        return "DialogData{" +
+                "dialogType=" + dialogType +
+                '}';
+    }
 }

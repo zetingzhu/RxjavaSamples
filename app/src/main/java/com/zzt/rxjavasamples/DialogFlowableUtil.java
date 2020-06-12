@@ -1,6 +1,8 @@
 package com.zzt.rxjavasamples;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 
 import com.zzt.rxjavasamples.dialog.SuperAlertDialog;
@@ -15,6 +17,7 @@ import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
@@ -31,7 +34,7 @@ public class DialogFlowableUtil {
     // 数据接收
     Subscription mSubscription;
     // 当前显示dialog
-    Object showDialog;
+    Dialog showDialog;
 
     private volatile static DialogFlowableUtil dialogFlowableUtil;
 
@@ -83,8 +86,8 @@ public class DialogFlowableUtil {
 
                     @Override
                     public void onNext(DialogData dialogData) {
-                        Log.d(TAG, "------onNext:");
-                        showDialog(dialogData);
+                        Log.d(TAG, "------onNext: " + dialogData.toString());
+//                        showDialog(dialogData);
                     }
 
                     @Override
@@ -108,24 +111,54 @@ public class DialogFlowableUtil {
             } else {
                 showDialog = DialogUtil.shwoDialog(context, null);
             }
-            if (showDialog instanceof SuperDialog) {
-                ((SuperDialog) showDialog).setOnFlowableDismissListener(dialog -> {
+//            if (showDialog instanceof SuperDialog) {
+//                ((SuperDialog) showDialog).setOnFlowableDismissListener(dialog -> {
+//                    requestFlowable(1);
+//                });
+//            } else if (showDialog instanceof SuperAlertDialog) {
+//                ((SuperAlertDialog) showDialog).setOnFlowableDismissListener(dialog -> {
+//                    requestFlowable(1);
+//                });
+//            }
+
+            showDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
                     requestFlowable(1);
-                });
-            } else if (showDialog instanceof SuperAlertDialog) {
-                ((SuperAlertDialog) showDialog).setOnFlowableDismissListener(dialog -> {
-                    requestFlowable(1);
-                });
-            }
+                }
+            });
         }
     }
 
 
     /**
+     * 测试方法
+     */
+    public void testFun() {
+        Log.e(TAG, "----------------------测试数据----------------------");
+        Log.e(TAG, "测试方法：" + mFlowableEmitter.serialize().requested());
+        Log.e(TAG, "测试方法：" + mFlowableEmitter.requested());
+        Log.e(TAG, "----------------------测试数据----------------------");
+    }
+
+    /**
      * 清空数据
      */
-    public void clearData(){
+    public void clearData() {
+        if (mFlowableEmitter.isCancelled()) {
+            mFlowableEmitter.onComplete();
+        }
+//       mFlowableEmitter.serialize();
+//       mFlowableEmitter.requested();
+    }
 
+    /**
+     * 取消订阅所有数据
+     */
+    public void cancleAllData() {
+        if (mSubscription != null) {
+            mSubscription.cancel();
+        }
     }
 
     /**
@@ -135,6 +168,7 @@ public class DialogFlowableUtil {
      */
     public void putDataFlowable(DialogData data) {
         if (mFlowableEmitter != null && !mFlowableEmitter.isCancelled()) {
+            Log.e(TAG, "上游未被请求的数量：" + mFlowableEmitter.requested());
             mFlowableEmitter.onNext(data);
             if (showDialog == null) {
                 requestFlowable(1);
