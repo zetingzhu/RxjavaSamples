@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 
-import com.zzt.rxjavasamples.dialog.SuperAlertDialog;
-import com.zzt.rxjavasamples.dialog.SuperDialog;
-
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
@@ -17,7 +14,6 @@ import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
 import io.reactivex.rxjava3.core.FlowableOnSubscribe;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
@@ -138,6 +134,7 @@ public class DialogFlowableUtil {
         Log.e(TAG, "----------------------测试数据----------------------");
         Log.e(TAG, "测试方法：" + mFlowableEmitter.serialize().requested());
         Log.e(TAG, "测试方法：" + mFlowableEmitter.requested());
+        mFlowableEmitter.onComplete();
         Log.e(TAG, "----------------------测试数据----------------------");
     }
 
@@ -156,6 +153,7 @@ public class DialogFlowableUtil {
      * 取消订阅所有数据
      */
     public void cancleAllData() {
+        Log.e(TAG, "取消订阅所有数据");
         if (mSubscription != null) {
             mSubscription.cancel();
         }
@@ -167,23 +165,24 @@ public class DialogFlowableUtil {
      * @param data
      */
     public void putDataFlowable(DialogData data) {
+        Log.e(TAG, "添加队列数据:" + data.toString());
         if (mFlowableEmitter != null && !mFlowableEmitter.isCancelled()) {
             Log.e(TAG, "上游未被请求的数量：" + mFlowableEmitter.requested());
             mFlowableEmitter.onNext(data);
-            if (showDialog == null) {
-                requestFlowable(1);
-            }
-            if (showDialog != null) {
-                if (showDialog instanceof SuperDialog) {
-                    if (!((SuperDialog) showDialog).isShowing()) {
-                        requestFlowable(1);
-                    }
-                } else if (showDialog instanceof SuperAlertDialog) {
-                    if (!((SuperAlertDialog) showDialog).isShowing()) {
-                        requestFlowable(1);
-                    }
-                }
-            }
+//            if (showDialog == null) {
+//                requestFlowable(1);
+//            }
+//            if (showDialog != null) {
+//                if (showDialog instanceof SuperDialog) {
+//                    if (!((SuperDialog) showDialog).isShowing()) {
+//                        requestFlowable(1);
+//                    }
+//                } else if (showDialog instanceof SuperAlertDialog) {
+//                    if (!((SuperAlertDialog) showDialog).isShowing()) {
+//                        requestFlowable(1);
+//                    }
+//                }
+//            }
         }
     }
 
@@ -196,8 +195,19 @@ public class DialogFlowableUtil {
     public void requestFlowable(int n) {
         if (mSubscription != null) {
             mSubscription.request(n);
+            Log.e(TAG, "测试方法：" + mFlowableEmitter.requested());
+            Log.e(TAG, "测试方法：" + mSubscription.toString());
         }
     }
 
+    /**
+     * 重新启动队列
+     */
+    public void restatrFlowable() {
+        if (mFlowableEmitter == null || mFlowableEmitter.isCancelled()) {
+            createFlowable();
+            Log.e(TAG, "重新启动队列");
+        }
+    }
 
 }

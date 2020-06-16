@@ -18,5 +18,6 @@ public class ActivtyTest extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         findViewById(R.id.tv_add) ;
+
     }
 }
